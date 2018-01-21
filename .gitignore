@@ -2,3 +2,4 @@ node_modules
 DS_store
 database.sqlite
 test.sqlite
+npm-debug.log
