@@ -1,6 +1,8 @@
+// Import sqlite3 and db
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
+// Create Employee Table
 db.run('DROP TABLE IF EXISTS Employee', error => {
   if (error) {
     console.log(error)
@@ -20,6 +22,7 @@ db.run('DROP TABLE IF EXISTS Employee', error => {
   })
 })
 
+// Create Timesheet Table
 db.run('DROP TABLE IF EXISTS Timesheet', error => {
   if (error) {
     console.log(error)
@@ -40,6 +43,7 @@ db.run('DROP TABLE IF EXISTS Timesheet', error => {
   })
 })
 
+// Create Menu Table
 db.run('DROP TABLE IF EXISTS Menu', error => {
   if (error) {
     console.log(error)
@@ -56,6 +60,7 @@ db.run('DROP TABLE IF EXISTS Menu', error => {
   })
 })
 
+// Create MenuItem Table
 db.run('DROP TABLE IF EXISTS MenuItem', error => {
   if (error) {
     console.log(error)

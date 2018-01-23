@@ -1,9 +1,11 @@
+// Import express, router, and db
 const express = require('express')
 const menuRouter = express.Router()
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 const menuItemRouter = require('./menuItems.js')
 
+// Menu param
 menuRouter.param('menuId', (req, res, next, menuId) => {
   db.get('SELECT * FROM Menu WHERE Menu.id = $menuId', {$menuId: menuId}, (error, menu) => {
     if (error) {
@@ -17,8 +19,10 @@ menuRouter.param('menuId', (req, res, next, menuId) => {
   })
 })
 
+// Use menuItem Router
 menuRouter.use('/:menuId/menu-items', menuItemRouter)
 
+// Get all menu request
 menuRouter.get('/', (req, res, next) => {
   db.all(`SELECT * FROM Menu`, (error, menus) => {
     if (error) {
@@ -29,10 +33,12 @@ menuRouter.get('/', (req, res, next) => {
   })
 })
 
+// Get single menu request
 menuRouter.get('/:menuId', (req, res, next) => {
   res.status(200).json({menu: req.menu})
 })
 
+// Post menu request
 menuRouter.post('/', (req, res, next) => {
   const title = req.body.menu.title
 
@@ -51,6 +57,7 @@ menuRouter.post('/', (req, res, next) => {
   })
 })
 
+// Update menu request
 menuRouter.put('/:menuId', (req, res, next) => {
   const title = req.body.menu.title
 
@@ -73,6 +80,7 @@ menuRouter.put('/:menuId', (req, res, next) => {
   })
 })
 
+// Delete menu request
 menuRouter.delete('/:menuId', (req, res, next) => {
   db.get(`SELECT * FROM MenuItem WHERE MenuItem.menu_id = ${req.params.menuId}`, (error, menuItem) => {
     if (error) {

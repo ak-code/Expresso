@@ -1,8 +1,10 @@
+// Import express, router, and db
 const express = require('express')
 const timesheetRouter = express.Router({mergeParams: true})
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
+// Timesheet param
 timesheetRouter.param('timesheetId', (req, res, next, timesheetId) => {
   db.get(`SELECT * FROM Timesheet WHERE id = ${timesheetId}`, (error, timesheet) => {
     if (error) {
@@ -16,6 +18,7 @@ timesheetRouter.param('timesheetId', (req, res, next, timesheetId) => {
   })
 })
 
+// Get all timesheet request
 timesheetRouter.get('/', (req, res, next) => {
   db.all('SELECT * FROM Timesheet WHERE Timesheet.employee_id = $employeeId;',
   {
@@ -29,6 +32,7 @@ timesheetRouter.get('/', (req, res, next) => {
   })
 })
 
+// Post timesheet request
 timesheetRouter.post('/', (req, res, next) => {
   const hours = req.body.timesheet.hours
   const rate = req.body.timesheet.rate
@@ -64,6 +68,7 @@ timesheetRouter.post('/', (req, res, next) => {
   })
 })
 
+// Update timesheet request
 timesheetRouter.put('/:timesheetId', (req, res, next) => {
   const hours = req.body.timesheet.hours
   const rate = req.body.timesheet.rate
@@ -101,6 +106,7 @@ timesheetRouter.put('/:timesheetId', (req, res, next) => {
   })
 })
 
+// Delete timesheet request
 timesheetRouter.delete('/:timesheetId', (req, res, next) => {
   db.run(`DELETE FROM Timesheet WHERE id = ${req.params.timesheetId};`, (error) => {
     if (error) {

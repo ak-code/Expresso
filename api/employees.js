@@ -1,9 +1,11 @@
+// Import express, router, and db
 const express = require('express')
 const employeeRouter = express.Router()
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 const timesheetRouter = require('./timesheet.js')
 
+// Employee param
 employeeRouter.param('employeeId', (req, res, next, employeeId) => {
   db.get('SELECT * FROM Employee WHERE Employee.id = $employeeId', {$employeeId: employeeId}, (error, employee) => {
     if (error) {
@@ -17,8 +19,10 @@ employeeRouter.param('employeeId', (req, res, next, employeeId) => {
   })
 })
 
+// Use timesheet Router
 employeeRouter.use('/:employeeId/timesheets', timesheetRouter)
 
+// Get all employees request
 employeeRouter.get('/', (req, res, next) => {
   db.all(`SELECT * FROM Employee WHERE is_current_employee = 1`, (error, employees) => {
     if (error) {
@@ -29,10 +33,12 @@ employeeRouter.get('/', (req, res, next) => {
   })
 })
 
+// Get single employee request
 employeeRouter.get('/:employeeId', (req, res, next) => {
   res.status(200).json({employee: req.employee})
 })
 
+// Post employee require
 employeeRouter.post('/', (req, res, next) => {
   const name = req.body.employee.name
   const position = req.body.employee.position
@@ -62,6 +68,7 @@ employeeRouter.post('/', (req, res, next) => {
   })
 })
 
+// Update employee request
 employeeRouter.put('/:employeeId', (req, res, next) => {
   const name = req.body.employee.name
   const position = req.body.employee.position
@@ -92,6 +99,7 @@ employeeRouter.put('/:employeeId', (req, res, next) => {
   })
 })
 
+// Delete employee request
 employeeRouter.delete('/:employeeId', (req, res, next) => {
   db.run(`UPDATE Employee SET is_current_employee = 0 WHERE Employee.id = $employeeId`,
   {
