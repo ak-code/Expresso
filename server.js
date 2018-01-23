@@ -5,11 +5,14 @@ const bodyParser = require('body-parser')
 
 const express = require('express')
 const app = express()
+const apiRouter = require('./api/api.js')
 
 app.use(cors())
 app.use(errorhandler())
 app.use(morgan('dev'))
 app.use(bodyParser.json())
+
+app.use('/api', apiRouter)
 
 const PORT = process.env.PORT || 4000
 app.listen(PORT, () => {
